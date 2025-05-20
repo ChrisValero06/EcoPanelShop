@@ -1,0 +1,99 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  padding-bottom: 60px;
+}
+
+/* Menú superior (hamburguesa) */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: none;
+  flex-direction: column;
+  background: #4CAF50;
+}
+
+.nav-links a {
+  padding: 10px;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  background: #388E3C;
+}
+
+.show {
+  display: flex;
+}
+
+/* Secciones */
+section {
+  padding: 40px 20px;
+}
+
+section:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+/* Menú inferior con íconos */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #4CAF50;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.bottom-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+/* Footer */
+footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex !important;
+    flex-direction: row;
+  }
+  .menu-icon {
+    display: none;
+  }
+  .bottom-nav {
+    display: none;
+  }
+}
