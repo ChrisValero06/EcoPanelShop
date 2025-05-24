@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mini Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Menú de navegación -->
+  <nav class="top-nav">
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+    <h1>Mi Web</h1>
+  </nav>
+  <div class="nav-links" id="navLinks">
+    <a href="#home">Home</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About Us</a>
+    <a href="#cv">Currículum</a>
+  </div>
+
+  <!-- Secciones -->
+  <section id="home">
+    <h2>Home</h2>
+    <p>Bienvenido a la página de inicio.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>Contáctanos por correo o teléfono.</p>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>Soy un estudiante con ganas de trabajar para poner aprueba mis Habilidades y conocimientos</p>
+  </section>
+
+  <!-- Sección de Currículum -->
+  <section id="cv">
+    <h2>Mi Currículum</h2>
+    <p>Aquí puedes visualizar mi currículum en línea o descargarlo para más detalles:</p>
+    <iframe src="Christopher Elias Valero Gomez..pdf" width="100%" height="600px"></iframe>
+    <h3>Resumen profesional</h3>
+    <ul>
+      <li><strong>Nombre:</strong> Christopher Elias Valero Gomez</li>
+      <li><strong>Enfoque:</strong> Desarrollo de software (C#, Python, PHP)</li>
+      <li><strong>Estudios:</strong> TSU en Ingeniería de software (UT Santa Catarina)</li>
+      <li><strong>Habilidades:</strong> HTML, JavaScript, SQL, Angular, .NET, GitHub</li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Mi Primera Pagina Web. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Menú inferior (solo móvil) -->
+  <div class="bottom-nav">
+    <a href="#home" title="Inicio">🏠</a>
+    <a href="#contact" title="Contacto">📞</a>
+    <a href="#about" title="Nosotros">👤</a>
+    <a href="#cv" title="Currículum">📄</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
