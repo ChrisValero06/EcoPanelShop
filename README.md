@@ -1,2 +1,2 @@
-# ChrisValero06-github.io
+# EcoPanelShop-github.io
 Es mi sitio web Personal 
