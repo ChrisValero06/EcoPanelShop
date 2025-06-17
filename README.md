@@ -1,2 +1,2 @@
-# EcoPanelShop-github.io
+# EcoPanelShop
 Es mi sitio web Personal 
