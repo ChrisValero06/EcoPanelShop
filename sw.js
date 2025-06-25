@@ -1,8 +1,8 @@
 
-const CACHE_NAME = 'ecoshop-v1.0.0';
+const ecoshop = 'ecoshop-cache-v1';
 
 
-const appShell = [
+const urlsToCache = [
   '/',
   '/index.html',
   '/login.html',
@@ -25,7 +25,7 @@ const appShell = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(odsquiz).then(cache => {
+    caches.open(ecoshop).then(cache => {
       return cache.addAll(urlsToCache);
     })
   );
@@ -36,7 +36,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys => {
       return Promise.all(
         keys.map(key => {
-          if (key !== odsquiz) {
+          if (key !== ecoshop) {
             return caches.delete(key);
           }
         })
