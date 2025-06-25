@@ -278,8 +278,14 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/script.js"></script>
-    <script src="js/app.js"></script>
+     <script src="/EcoPanelShop/js/script.js"></script>
+    <script src="/EcoPanelShop/js/app.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/EcoPanelShop/serviceworker.js')
+          .then(reg => console.log('SW registrado'))
+          .catch(err => console.log('Error al registrar SW', err));
+      }
+    </script>
 </body>
 </html> 
