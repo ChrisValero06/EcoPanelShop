@@ -2,8 +2,8 @@ const ecoshop = 'ecoshop-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
- '/css/styles.css',
-  '/js/script.js',
+  '/styles.css',
+  '/script.js',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
