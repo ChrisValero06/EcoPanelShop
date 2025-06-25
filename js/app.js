@@ -1,5 +1,11 @@
-// Main Application File for EcoShop Solar Panels
-// Handles Firebase integration, product display, cart management, and user interactions
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(res => console.log("service worker registered"))
+      .catch(err => console.log("service worker not registered", err));
+  });
+}
 
 class EcoShopApp {
     constructor() {
@@ -17,21 +23,21 @@ class EcoShopApp {
 
     async init() {
         try {
-            // Initialize Firebase Auth
+            
             await this.initializeAuth();
             
-            // Load sample products (for demo purposes)
+            
             this.loadSampleProducts();
             
-            // Load categories
+            
             await this.loadCategories();
             
-            // Load user cart if authenticated
+            
             if (this.currentUser) {
                 await this.loadUserCart();
             }
             
-            // Set up event listeners
+            
             this.setupEventListeners();
             
             console.log('EcoShop app initialized successfully');
@@ -41,7 +47,7 @@ class EcoShopApp {
         }
     }
 
-    // Initialize authentication
+    
     async initializeAuth() {
         return new Promise((resolve) => {
             firebase.auth().onAuthStateChanged(async (user) => {
@@ -61,7 +67,7 @@ class EcoShopApp {
         });
     }
 
-    // Update authentication UI
+    
     updateAuthUI() {
         const loginLink = document.getElementById('loginLink');
         const userInfo = document.getElementById('userInfo');
@@ -81,7 +87,7 @@ class EcoShopApp {
         }
     }
 
-    // Load sample products for demo
+    
     loadSampleProducts() {
         this.products = [
             {
@@ -173,14 +179,14 @@ class EcoShopApp {
         this.renderProducts(this.products);
     }
 
-    // Load categories
+    
     async loadCategories() {
         try {
             const result = await firebaseInventory.getAllCategories();
             if (result.success) {
                 this.categories = result.categories;
             } else {
-                // Use sample categories for demo
+                
                 this.categories = [
                     { id: 'residencial', name: 'Residencial' },
                     { id: 'comercial', name: 'Comercial' },
@@ -194,7 +200,6 @@ class EcoShopApp {
         }
     }
 
-    // Render categories
     renderCategories() {
         const dropdown = document.getElementById('categoriesDropdown');
         const categoryFilter = document.getElementById('categoryFilter');
@@ -213,7 +218,7 @@ class EcoShopApp {
         }
     }
 
-    // Render products in grid
+    
     renderProducts(products) {
         const productsGrid = document.getElementById('productsGrid');
         
@@ -233,7 +238,7 @@ class EcoShopApp {
         productsGrid.innerHTML = products.map(product => this.createProductCard(product)).join('');
     }
 
-    // Create product card HTML
+    
     createProductCard(product) {
         const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
         
@@ -269,7 +274,7 @@ class EcoShopApp {
         `;
     }
 
-    // Show product details modal
+    
     async showProductDetails(productId) {
         const product = this.products.find(p => p.id === productId);
         if (!product) {
@@ -280,7 +285,7 @@ class EcoShopApp {
         this.showModal(this.createProductModal(product));
     }
 
-    // Create product modal HTML
+    
     createProductModal(product) {
         const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
         
@@ -321,7 +326,7 @@ class EcoShopApp {
         `;
     }
 
-    // Show modal
+
     showModal(content) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
@@ -332,7 +337,7 @@ class EcoShopApp {
         document.body.appendChild(modal);
     }
 
-    // Close modal
+    
     closeModal() {
         const modal = document.querySelector('.modal-overlay');
         if (modal) {
@@ -340,7 +345,7 @@ class EcoShopApp {
         }
     }
 
-    // Change quantity in modal
+    
     changeQuantity(delta) {
         const input = document.getElementById('productQuantity');
         if (input) {
@@ -349,14 +354,14 @@ class EcoShopApp {
         }
     }
 
-    // Add to cart from modal
+    
     async addToCartFromModal(productId) {
         const quantity = parseInt(document.getElementById('productQuantity')?.value || 1);
         await this.addToCart(productId, quantity);
         this.closeModal();
     }
 
-    // Add to cart
+    
     async addToCart(productId, quantity = 1) {
         if (!this.currentUser) {
             this.showNotification('Debes iniciar sesión para agregar productos al carrito', 'error');
@@ -376,7 +381,7 @@ class EcoShopApp {
                     this.showNotification(result.error, 'error');
                 }
             } else {
-                // Fallback for demo without Firebase
+                
                 const product = this.products.find(p => p.id === productId);
                 if (product) {
                     const existingItem = this.cart.items.find(item => item.productId === productId);
@@ -406,7 +411,7 @@ class EcoShopApp {
         }
     }
 
-    // Load user cart
+    
     async loadUserCart() {
         if (!this.currentUser) return;
 
@@ -423,18 +428,18 @@ class EcoShopApp {
         }
     }
 
-    // Update cart UI
+    
     updateCartUI() {
         const cartCount = document.getElementById('cartCount');
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
         const checkoutBtn = document.getElementById('checkoutBtn');
 
-        // Update cart count
+        
         const totalItems = this.cart.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
         if (cartCount) cartCount.textContent = totalItems;
 
-        // Update cart items
+    
         if (cartItems) {
             if (this.cart.items?.length > 0) {
                 cartItems.innerHTML = this.cart.items.map(item => this.createCartItemHTML(item)).join('');
@@ -443,18 +448,18 @@ class EcoShopApp {
             }
         }
 
-        // Update total
+        
         if (cartTotal) {
             cartTotal.textContent = `Total: $${(this.cart.total || 0).toLocaleString('es-MX')}`;
         }
 
-        // Update checkout button
+        
         if (checkoutBtn) {
             checkoutBtn.disabled = totalItems === 0;
         }
     }
 
-    // Create cart item HTML
+
     createCartItemHTML(item) {
         return `
             <div class="cart-item">
@@ -475,7 +480,7 @@ class EcoShopApp {
         `;
     }
 
-    // Update cart item quantity
+    
     async updateCartItemQuantity(productId, newQuantity) {
         if (!this.currentUser) return;
 
@@ -487,7 +492,7 @@ class EcoShopApp {
                     this.updateCartUI();
                 }
             } else {
-                // Fallback for demo
+                
                 const item = this.cart.items.find(item => item.productId === productId);
                 if (item) {
                     if (newQuantity <= 0) {
@@ -505,7 +510,7 @@ class EcoShopApp {
         }
     }
 
-    // Remove from cart
+    
     async removeFromCart(productId) {
         if (!this.currentUser) return;
 
@@ -518,7 +523,7 @@ class EcoShopApp {
                     this.showNotification('Producto removido del carrito', 'success');
                 }
             } else {
-                // Fallback for demo
+                
                 this.cart.items = this.cart.items.filter(item => item.productId !== productId);
                 this.cart.total = this.cart.items.reduce((sum, item) => sum + item.subtotal, 0);
                 this.updateCartUI();
@@ -529,13 +534,13 @@ class EcoShopApp {
         }
     }
 
-    // Clear cart
+
     clearCart() {
         this.cart = { items: [], total: 0 };
         this.updateCartUI();
     }
 
-    // Checkout
+
     async checkout() {
         if (!this.currentUser) {
             this.showNotification('Debes iniciar sesión para realizar una compra', 'error');
@@ -547,20 +552,19 @@ class EcoShopApp {
             return;
         }
 
-        // For now, just show a success message
+        
         this.showNotification('¡Compra realizada con éxito! Gracias por tu compra.', 'success');
         
-        // Clear cart
+        
         if (firebaseInventory) {
             await firebaseInventory.clearCart(this.currentUser.uid);
         }
         this.clearCart();
         
-        // Close cart
+        
         this.toggleCart();
     }
 
-    // Search products
     async searchProducts() {
         const searchTerm = document.getElementById('searchInput')?.value.trim();
         if (!searchTerm) {
@@ -576,7 +580,7 @@ class EcoShopApp {
         this.renderProducts(filteredProducts);
     }
 
-    // Filter by category
+    
     filterByCategory(categoryId = null) {
         if (!categoryId) {
             categoryId = document.getElementById('categoryFilter')?.value;
@@ -586,23 +590,23 @@ class EcoShopApp {
         this.applyFilters();
     }
 
-    // Filter by price
+    
     filterByPrice() {
         const priceRange = document.getElementById('priceFilter')?.value;
         this.filters.priceRange = priceRange;
         this.applyFilters();
     }
 
-    // Apply all filters
+    
     applyFilters() {
         let filteredProducts = [...this.products];
 
-        // Category filter
+        
         if (this.filters.category) {
             filteredProducts = filteredProducts.filter(product => product.categoryId === this.filters.category);
         }
 
-        // Price filter
+        
         if (this.filters.priceRange) {
             const [min, max] = this.filters.priceRange.split('-').map(Number);
             filteredProducts = filteredProducts.filter(product => {
@@ -614,7 +618,7 @@ class EcoShopApp {
             });
         }
 
-        // Search filter
+        
         if (this.filters.search) {
             const searchTerm = this.filters.search.toLowerCase();
             filteredProducts = filteredProducts.filter(product =>
@@ -626,7 +630,7 @@ class EcoShopApp {
         this.renderProducts(filteredProducts);
     }
 
-    // Toggle cart sidebar
+    
     toggleCart() {
         const cart = document.getElementById('cart');
         if (cart) {
@@ -634,7 +638,7 @@ class EcoShopApp {
         }
     }
 
-    // Show loading overlay
+    
     showLoading(show) {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
@@ -642,7 +646,7 @@ class EcoShopApp {
         }
     }
 
-    // Show notification
+    
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -678,15 +682,15 @@ class EcoShopApp {
         }, 3000);
     }
 
-    // Setup event listeners
+    
     setupEventListeners() {
-        // Cart toggle
+        
         const cartIcon = document.getElementById('cartIcon');
         if (cartIcon) {
             cartIcon.addEventListener('click', () => this.toggleCart());
         }
 
-        // Search input
+        
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             searchInput.addEventListener('keypress', (e) => {
@@ -698,10 +702,10 @@ class EcoShopApp {
     }
 }
 
-// Initialize EcoShop app
+
 const app = new EcoShopApp();
 
-// Global functions for HTML onclick handlers
+
 window.scrollToProducts = () => {
     document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
 };
