@@ -1,5 +1,5 @@
-const ecoshop = 'ecoshop-cache-v1';
-const urlsToCache = [
+const CacheKeyShop = "Shop-v1.0.0";
+const appShell= [
   '/',
   '/index.html',
   '/styles.css',
@@ -9,33 +9,20 @@ const urlsToCache = [
   '/icons/icon-512.png',
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(ecoshop).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
-  );
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.map(key => {
-          if (key !== ecoshop) {
-            return caches.delete(key);
-          }
+self.addEventListener("install", installEvent => {
+    installEvent.waitUntil(
+        caches.open(CacheKeyShop).then(cache => {
+            cache.addAll(assets);
         })
-      );
-    })
-  );
+    );
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    }).catch(() => {
-    })
+self.addEventListener("fetch", fetchEvent => {
+    fetchEvent.respondWith(
+        caches.match(fetchEvent.request).then(res => {
+            return res || fetch(fetchEvent.request);
+        })
+    );
+});
   );
 });
