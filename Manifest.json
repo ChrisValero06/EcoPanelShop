@@ -11,9 +11,9 @@
   "lang": "es",
   "dir": "ltr",
   "categories": ["business", "shopping", "utilities"],
-  "icons": [
+  "icono": [
     {
-      "src": "icons/icon-72x72.png",
+      "src": "icono/favicon.ico",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable any"
