@@ -1,7 +1,6 @@
 {
   "name": "EcoShop - Paneles Solares",
   "short_name": "shop",
-  "description": "Tu tienda especializada en paneles solares y energía renovable. Encuentra los mejores productos para tu hogar o negocio.",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#667eea",
@@ -19,5 +18,4 @@
       "type": "image/png"
     }
   ],
-  "categories": ["business", "shopping", "utilities"]
 }
