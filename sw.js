@@ -1,11 +1,8 @@
 
-
 const CACHE_NAME = 'ecoshop-v1.0.0';
-const STATIC_CACHE = 'ecoshop-static-v1';
-const DYNAMIC_CACHE = 'ecoshop-dynamic-v1';
 
 
-const STATIC_FILES = [
+const appShell = [
   '/',
   '/index.html',
   '/login.html',
@@ -27,10 +24,6 @@ const STATIC_FILES = [
 
 const appCacheKey = "EcoShop-v1"; 
 
-const STATIC_STRATEGY = 'cache-first'
-
-const DYNAMIC_STRATEGY = 'network-first';
-
 
 self.addEventListener("install", installEvent => {
   installEvent.waitUntil(
@@ -45,5 +38,8 @@ self.addEventListener("fetch", fetchEvent => {
     caches.match(fetchEvent.request).then(res => {
       return res || fetch(fetchEvent.request);
     })
+  );
+});
+
   );
 });
