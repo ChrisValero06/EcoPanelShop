@@ -1,7 +1,4 @@
-
 const ecoshop = 'ecoshop-cache-v1';
-
-
 const urlsToCache = [
   '/',
   '/index.html',
