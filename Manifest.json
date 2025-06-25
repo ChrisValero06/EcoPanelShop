@@ -1,13 +1,12 @@
 {
   "name": "EcoShop - Paneles Solares",
-  "short_name": "nombreProvisional",
+  "short_name": "shop",
   "description": "Tu tienda especializada en paneles solares y energía renovable. Encuentra los mejores productos para tu hogar o negocio.",
-  "start_url": "/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
   "orientation": "portrait",
-  "lang": "es",
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -17,18 +16,6 @@
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/pantalla-inicio.png",
-      "sizes": "540x720",
-      "type": "image/png"
-    },
-    {
-      "src": "/screenshots/pregunta-ods.png",
-      "sizes": "540x720",
       "type": "image/png"
     }
   ],
