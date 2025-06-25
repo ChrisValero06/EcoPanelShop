@@ -7,11 +7,7 @@
   "background_color": "#667eea",
   "theme_color": "#667eea",
   "orientation": "portrait-primary",
-  "scope": "/",
   "lang": "es",
-  "dir": "ltr",
-  "categories": ["business", "shopping", "utilities"],
-  "icons": [
  "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -36,6 +32,5 @@
       "type": "image/png"
     }
   ],
-    "categories": ["paneles solares", "ecologico","ambiental","ONG"]
-
-    }
+   "categories": ["business", "shopping", "utilities"],
+  }
