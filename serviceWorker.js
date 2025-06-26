@@ -1,27 +1,25 @@
 const CacheKeyShop = "Shop-v1.0.0";
-const appShell= [
+const appShell = [
   '/',
   '/index.html',
   '/styles.css',
-  '/script.js',
+  '/js/app.js',
+  '/js/script.js',
   '/manifest.json',
   '/icons/icon-512.png',
 ];
-
 self.addEventListener("install", installEvent => {
-    installEvent.waitUntil(
-        caches.open(CacheKeyShop).then(cache => {
-            cache.addAll(assets);
-        })
-    );
+  installEvent.waitUntil(
+    caches.open(CacheKeyShop).then(cache => {
+      return cache.addAll(appShell);
+    })
+  );
 });
 
 self.addEventListener("fetch", fetchEvent => {
-    fetchEvent.respondWith(
-        caches.match(fetchEvent.request).then(res => {
-            return res || fetch(fetchEvent.request);
-        })
-    );
-});
+  fetchEvent.respondWith(
+    caches.match(fetchEvent.request).then(res => {
+      return res || fetch(fetchEvent.request);
+    })
   );
 });
