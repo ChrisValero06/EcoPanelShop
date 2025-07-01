@@ -1,8 +1,5 @@
-if("serviceWorker" in navigator){
-    window.addEventListener("load", function(){
-        this.navigator.serviceWorker
-        .register("/serviceWorker.js")
-        .then(res => console.log("service worker registered"))
-        .catch(err => console.log("service worker not registered", err));
-    });
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./serviceWorker.js', { scope: './' })
+    .then(() => console.log('Service Worker registrado'))
+    .catch(err => console.error('Error al registrar el Service Worker:', err));
 }

@@ -1,13 +1,14 @@
 const CacheKeyShop = "Shop-v1.0.0";
 const appShell = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/js/app.js',
-  '/js/script.js',
-  '/manifest.json',
-  '/icons/icon-512.png',
+  './',
+  './index.html',
+  './styles.css',
+  './js/app.js',
+  './js/script.js',
+  './manifest.json',
+  './icons/icon-512.png',
 ];
+
 self.addEventListener("install", installEvent => {
   installEvent.waitUntil(
     caches.open(CacheKeyShop).then(cache => {
