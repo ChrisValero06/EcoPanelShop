@@ -4,7 +4,7 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.error('Error al registrar el Service Worker:', err));
 }
 
-// Ejemplo: Leer paneles solares desde Firestore y mostrarlos en consola
+//  Leer paneles solares desde Firestore y mostrarlos en consola
 if (typeof db !== 'undefined') {
   db.collection("paneles").get().then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
