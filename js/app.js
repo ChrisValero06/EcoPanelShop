@@ -31,7 +31,7 @@ function mostrarPanelesEnProductos() {
 
       querySnapshot.forEach((doc) => {
         const panel = doc.data();
-        // Personaliza los campos según tu estructura
+        // cada campo varia segun la estructura
         const panelHTML = `
           <div class="product-card">
             <div class="product-image">
