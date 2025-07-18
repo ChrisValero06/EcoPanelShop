@@ -1257,3 +1257,48 @@ body {
         height: 120px;
     }
 } 
+
+/* --- Paneles Solares Table Styles (CRUD) --- */
+#tabla-paneles {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#tabla-paneles th, #tabla-paneles td {
+  border: 1px solid #ddd;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+#tabla-paneles th {
+  background: #009688;
+  color: #fff;
+  font-weight: bold;
+}
+
+#tabla-paneles tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+#tabla-paneles tr:hover {
+  background: #e0f7fa;
+}
+
+#tabla-paneles button {
+  background: #009688;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  margin: 0 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#tabla-paneles button:hover {
+  background: #00796b;
+} 
