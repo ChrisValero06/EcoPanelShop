@@ -59,5 +59,5 @@ function mostrarPanelesEnProductos() {
   }
 }
 
-// Llama a la función al cargar la página
+// Llama a la función al cargar la página:
 document.addEventListener('DOMContentLoaded', mostrarPanelesEnProductos);
