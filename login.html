@@ -419,6 +419,9 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Sistema de autenticación local -->
+    <script src="js/local-auth.js"></script>
+    
     <script>
         // Variables globales
         let isLoginMode = true;
@@ -445,7 +448,7 @@
         });
         
         // Manejar envío del formulario
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
@@ -466,27 +469,26 @@
             // Mostrar spinner
             showLoading(true);
             
-            // Simular proceso de login (aquí iría la lógica real de Firebase Auth)
-            setTimeout(() => {
-                showLoading(false);
+            // Usar el sistema de autenticación local
+            const result = await loginUser(email, password);
+            
+            showLoading(false);
+            
+            if (result.success) {
+                showAlert('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
                 
-                // Simular login exitoso
-                if (email === 'admin@ecoshop.com' && password === 'admin123') {
-                    showAlert('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
-                    
-                    // Guardar datos de sesión
-                    if (rememberMe) {
-                        localStorage.setItem('userEmail', email);
-                    }
-                    
-                    // Redirigir después de 2 segundos
-                    setTimeout(() => {
-                        window.location.href = 'contacto.html';
-                    }, 2000);
-                } else {
-                    showAlert('Credenciales incorrectas. Intenta de nuevo.', 'danger');
+                // Guardar datos de sesión si se marca "recordarme"
+                if (rememberMe) {
+                    localStorage.setItem('userEmail', email);
                 }
-            }, 2000);
+                
+                // Redirigir después de 2 segundos
+                setTimeout(() => {
+                    window.location.href = 'contacto.html';
+                }, 2000);
+            } else {
+                showAlert(result.error || 'Credenciales incorrectas. Intenta de nuevo.', 'danger');
+            }
         });
         
         // Función para mostrar alertas
@@ -528,7 +530,7 @@
         }
         
         // Función para recuperar contraseña
-        function forgotPassword() {
+        async function forgotPassword() {
             const email = document.getElementById('email').value;
             
             if (!email) {
@@ -541,7 +543,12 @@
                 return;
             }
             
-            showAlert('Se ha enviado un enlace de recuperación a tu correo electrónico', 'success');
+            const result = await localAuth.resetPassword(email);
+            if (result.success) {
+                showAlert(result.message, 'success');
+            } else {
+                showAlert(result.error, 'danger');
+            }
         }
         
         // Función para mostrar formulario de registro

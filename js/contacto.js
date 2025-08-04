@@ -1,6 +1,5 @@
 // Variables globales
-let messaging;
-let currentToken;
+let notificationPermission = 'default';
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,16 +9,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Inicializar la aplicación
 function initializeApp() {
-    // Verificar si el usuario está autenticado
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            console.log('Usuario autenticado:', user.email);
-            initializeNotifications();
-        } else {
-            // Redirigir al login si no está autenticado
-            window.location.href = 'login.html';
-        }
-    });
+    // Verificar si el usuario está autenticado usando el sistema local
+    if (isAuthenticated()) {
+        const user = getCurrentUser();
+        console.log('Usuario autenticado:', user.email);
+        initializeNotifications();
+    } else {
+        // Redirigir al login si no está autenticado
+        window.location.href = 'login.html';
+    }
 }
 
 // Configurar event listeners
@@ -47,6 +45,7 @@ async function handleFormSubmit(event) {
         
         // Obtener datos del formulario
         const formData = new FormData(event.target);
+        const currentUser = getCurrentUser();
         const contactData = {
             nombre: formData.get('nombre'),
             telefono: formData.get('telefono'),
@@ -55,7 +54,7 @@ async function handleFormSubmit(event) {
             intereses: formData.get('intereses'),
             mensaje: formData.get('mensaje'),
             fecha: new Date().toISOString(),
-            userId: firebase.auth().currentUser.uid
+            userId: currentUser ? currentUser.uid : 'anonymous'
         };
         
         // Guardar en Firebase
@@ -67,13 +66,15 @@ async function handleFormSubmit(event) {
         // Limpiar formulario
         event.target.reset();
         
-        // Enviar notificación
-        await sendNotification(contactData);
+        // Enviar notificación local
+        await sendLocalNotification(contactData);
         
-        // Mostrar solicitud de permisos de notificación
-        setTimeout(() => {
-            showNotificationPermission();
-        }, 2000);
+        // Mostrar solicitud de permisos de notificación si no están concedidos
+        if (notificationPermission !== 'granted') {
+            setTimeout(() => {
+                showNotificationPermission();
+            }, 2000);
+        }
         
     } catch (error) {
         console.error('Error al enviar formulario:', error);
@@ -85,187 +86,132 @@ async function handleFormSubmit(event) {
     }
 }
 
-// Guardar datos en Firebase
+// Guardar datos localmente (simulado)
 async function saveContactData(data) {
     try {
-        const user = firebase.auth().currentUser;
+        const user = getCurrentUser();
         if (!user) throw new Error('Usuario no autenticado');
         
-        const contactRef = firebase.database().ref('contacts');
-        const newContactRef = contactRef.push();
-        
-        await newContactRef.set({
+        // Simular guardado en localStorage
+        const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+        const newContact = {
             ...data,
             userId: user.uid,
             userEmail: user.email,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
+            timestamp: new Date().toISOString(),
+            id: 'contact_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+        };
         
-        console.log('Datos guardados exitosamente');
-        return newContactRef.key;
+        contacts.push(newContact);
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+        
+        console.log('Datos guardados exitosamente en localStorage');
+        return newContact.id;
     } catch (error) {
         console.error('Error al guardar datos:', error);
         throw error;
     }
 }
 
-// Inicializar notificaciones
+// Inicializar notificaciones locales
 function initializeNotifications() {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-        messaging = firebase.messaging();
+    if (window.notificationConfig && window.notificationConfig.isNotificationSupported()) {
+        notificationPermission = window.notificationConfig.getNotificationPermission();
+        console.log('Estado de permisos de notificación:', notificationPermission);
         
-        // Solicitar permisos de notificación
-        messaging.requestPermission()
-            .then(function(permission) {
-                if (permission === 'granted') {
-                    console.log('Permisos de notificación concedidos');
-                    getToken();
-                } else {
-                    console.log('Permisos de notificación denegados');
-                }
-            })
-            .catch(function(err) {
-                console.log('Error al solicitar permisos:', err);
-            });
-        
-        // Manejar mensajes en primer plano
-        messaging.onMessage(function(payload) {
-            console.log('Mensaje recibido:', payload);
-            showCustomNotification(payload);
-        });
-    }
-}
-
-// Obtener token de notificación
-function getToken() {
-    const config = window.notificationConfig.getNotificationConfig();
-    messaging.getToken({ vapidKey: config.vapidKey })
-        .then(function(token) {
-            if (token) {
-                currentToken = token;
-                saveTokenToDatabase(token);
-                console.log('Token obtenido:', token);
-            } else {
-                console.log('No se pudo obtener el token');
-            }
-        })
-        .catch(function(err) {
-            console.log('Error al obtener token:', err);
-        });
-}
-
-// Guardar token en Firebase
-async function saveTokenToDatabase(token) {
-    try {
-        const user = firebase.auth().currentUser;
-        if (!user) return;
-        
-        await firebase.database().ref(`users/${user.uid}/notificationToken`).set(token);
-        console.log('Token guardado en la base de datos');
-    } catch (error) {
-        console.error('Error al guardar token:', error);
+        // Si los permisos ya están concedidos, mostrar notificación de bienvenida
+        if (notificationPermission === 'granted') {
+            setTimeout(() => {
+                window.notificationConfig.showLocalNotification('welcome');
+            }, 3000);
+        }
     }
 }
 
 // Solicitar permisos de notificación
-function requestNotificationPermission() {
-    if ('Notification' in window) {
-        Notification.requestPermission().then(function(permission) {
+async function requestNotificationPermission() {
+    try {
+        if (window.notificationConfig && window.notificationConfig.isNotificationSupported()) {
+            const permission = await window.notificationConfig.requestNotificationPermission();
+            notificationPermission = permission;
+            
             if (permission === 'granted') {
-                console.log('Permisos concedidos');
+                console.log('Permisos de notificación concedidos');
                 hideNotificationPermission();
-                getToken();
+                
+                // Mostrar notificación de confirmación
+                window.notificationConfig.showLocalNotification('welcome');
+            } else {
+                console.log('Permisos de notificación denegados');
             }
-        });
+        }
+    } catch (error) {
+        console.error('Error al solicitar permisos:', error);
     }
 }
 
 // Ocultar solicitud de permisos
 function hideNotificationPermission() {
     const notificationPermission = document.getElementById('notificationPermission');
-    notificationPermission.style.display = 'none';
+    if (notificationPermission) {
+        notificationPermission.style.display = 'none';
+    }
 }
 
 // Mostrar solicitud de permisos
 function showNotificationPermission() {
     const notificationPermission = document.getElementById('notificationPermission');
-    notificationPermission.style.display = 'block';
+    if (notificationPermission && this.notificationPermission !== 'granted') {
+        notificationPermission.style.display = 'block';
+    }
 }
 
 // Mostrar mensaje de éxito
 function showSuccessMessage() {
     const successMessage = document.getElementById('successMessage');
-    successMessage.style.display = 'block';
-    
-    // Ocultar después de 5 segundos
-    setTimeout(() => {
-        successMessage.style.display = 'none';
-    }, 5000);
+    if (successMessage) {
+        successMessage.style.display = 'block';
+        
+        // Ocultar después de 5 segundos
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }
 }
 
-// Enviar notificación
-async function sendNotification(contactData) {
+// Enviar notificación local
+async function sendLocalNotification(contactData) {
     try {
-        // Enviar notificación al servidor (requiere backend)
-        const response = await fetch('/api/send-notification', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contactData: contactData,
-                userId: firebase.auth().currentUser.uid
-            })
-        });
-        
-        if (response.ok) {
-            console.log('Notificación enviada exitosamente');
+        if (window.notificationConfig && notificationPermission === 'granted') {
+            // Mostrar notificación de confirmación del formulario
+            window.notificationConfig.showLocalNotification('contactFormSubmitted', {
+                body: `Gracias ${contactData.nombre}, hemos recibido tu mensaje. Nos pondremos en contacto contigo pronto.`,
+                data: {
+                    contactId: contactData.userId,
+                    email: contactData.email
+                }
+            });
+            
+            // Programar notificación de recordatorio para más tarde
+            window.notificationConfig.scheduleNotification('reminder', 30000, {
+                body: '¿Te interesa conocer más sobre nuestros paneles solares? ¡Visita nuestro catálogo!'
+            });
+            
+            console.log('Notificación local enviada exitosamente');
         }
     } catch (error) {
-        console.log('Error al enviar notificación:', error);
-        // Mostrar notificación local como fallback
-        showLocalNotification(contactData);
+        console.log('Error al enviar notificación local:', error);
     }
 }
 
-// Mostrar notificación local
-function showLocalNotification(contactData) {
-    if ('Notification' in window && Notification.permission === 'granted') {
-        const config = window.notificationConfig.getNotificationConfig();
-        const message = window.notificationConfig.getNotificationMessage('contactFormSubmitted');
-        
-        const notification = new Notification(message.title, {
-            body: `Gracias ${contactData.nombre}, ${message.body}`,
-            icon: config.appIcon,
-            badge: config.appIcon,
-            tag: 'contact-form',
-            requireInteraction: true
-        });
-        
-        notification.onclick = function() {
-            window.focus();
-            notification.close();
-        };
-    }
-}
-
-// Mostrar notificación personalizada
-function showCustomNotification(payload) {
-    const { title, body, icon } = payload.notification;
-    
-    if ('Notification' in window && Notification.permission === 'granted') {
-        const notification = new Notification(title, {
+// Función para mostrar notificación personalizada
+function showCustomNotification(title, body, options = {}) {
+    if (window.notificationConfig && notificationPermission === 'granted') {
+        return window.notificationConfig.showLocalNotification('custom', {
+            title: title,
             body: body,
-            icon: icon || '/icons/icon-512.png',
-            badge: '/icons/icon-512.png',
-            tag: 'custom-notification',
-            requireInteraction: true
+            ...options
         });
-        
-        notification.onclick = function() {
-            window.focus();
-            notification.close();
-        };
     }
 }
 
@@ -305,5 +251,7 @@ function downloadWebApp() {
 window.contactoApp = {
     downloadWebApp,
     requestNotificationPermission,
-    hideNotificationPermission
+    hideNotificationPermission,
+    showCustomNotification,
+    scheduleCustomNotification
 }; 

@@ -1,8 +1,5 @@
-// Configuración para notificaciones push
+// Configuración para notificaciones locales del navegador
 const notificationConfig = {
-    // Clave VAPID pública (reemplaza con tu clave real)
-    vapidKey: 'TU_VAPID_PUBLIC_KEY',
-    
     // Configuración de la aplicación
     appName: 'EcoPanelShop',
     appIcon: '/icons/icon-512.png',
@@ -32,13 +29,21 @@ const notificationConfig = {
         reminder: {
             title: 'Recordatorio EcoPanelShop',
             body: 'No olvides revisar nuestras últimas ofertas en energía renovable.'
+        },
+        newProduct: {
+            title: '¡Nuevo producto disponible!',
+            body: 'Hemos agregado nuevos paneles solares a nuestro catálogo.'
+        },
+        priceUpdate: {
+            title: 'Actualización de precios',
+            body: 'Los precios de nuestros paneles solares han sido actualizados.'
         }
     },
     
     // Configuración de permisos
     permissionOptions: {
         title: 'EcoPanelShop quiere enviarte notificaciones',
-        body: 'Las notificaciones pueden incluir alertas, sonidos y contadores de íconos, los cuales se pueden establecer en Configuración.',
+        body: 'Las notificaciones te mantendrán informado sobre nuevas ofertas, productos y actualizaciones.',
         allowText: 'Permitir',
         denyText: 'No permitir'
     }
@@ -64,9 +69,82 @@ function getNotificationOptions(type = 'default') {
     };
 }
 
-// Exportar configuración
+// Función para verificar si las notificaciones están soportadas
+function isNotificationSupported() {
+    return 'Notification' in window;
+}
+
+// Función para verificar el estado de los permisos
+function getNotificationPermission() {
+    if (!isNotificationSupported()) {
+        return 'not-supported';
+    }
+    return Notification.permission;
+}
+
+// Función para solicitar permisos de notificación
+async function requestNotificationPermission() {
+    if (!isNotificationSupported()) {
+        throw new Error('Las notificaciones no están soportadas en este navegador');
+    }
+    
+    const permission = await Notification.requestPermission();
+    return permission;
+}
+
+// Función para mostrar notificación local
+function showLocalNotification(type, customData = {}) {
+    if (!isNotificationSupported()) {
+        console.warn('Las notificaciones no están soportadas');
+        return null;
+    }
+    
+    if (Notification.permission !== 'granted') {
+        console.warn('Permisos de notificación no concedidos');
+        return null;
+    }
+    
+    const config = getNotificationConfig();
+    const message = getNotificationMessage(type);
+    
+    const notificationOptions = {
+        ...config.defaultNotificationOptions,
+        title: customData.title || message.title,
+        body: customData.body || message.body,
+        data: customData.data || {}
+    };
+    
+    const notification = new Notification(notificationOptions.title, notificationOptions);
+    
+    // Manejar clic en la notificación
+    notification.onclick = function() {
+        window.focus();
+        notification.close();
+        
+        // Ejecutar acción personalizada si se proporciona
+        if (customData.onClick) {
+            customData.onClick();
+        }
+    };
+    
+    return notification;
+}
+
+// Función para programar notificaciones
+function scheduleNotification(type, delay = 5000, customData = {}) {
+    setTimeout(() => {
+        showLocalNotification(type, customData);
+    }, delay);
+}
+
+// Exportar configuración y funciones
 window.notificationConfig = {
     getNotificationConfig,
     getNotificationMessage,
-    getNotificationOptions
+    getNotificationOptions,
+    isNotificationSupported,
+    getNotificationPermission,
+    requestNotificationPermission,
+    showLocalNotification,
+    scheduleNotification
 }; 
