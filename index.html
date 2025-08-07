@@ -2,11 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EcoShop - Paneles Solares de Alta Calidad</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="icons/icon-512.png" />
-    <link rel="Manifest" href="./Manifest.json">
+    <link rel="manifest" href="./manifest.json">
     
     <!-- Firebase SDKs (solo para paneles solares desde app móvil Maui) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -18,6 +19,8 @@
     <!-- Gestor de notificaciones locales -->
     <script src="js/notification-config.js"></script>
     <script src="js/notification-manager.js"></script>
+    <!-- Administración de paneles -->
+    <script src="js/admin-paneles.js"></script>
 
 <body>
     <!-- Header -->
@@ -32,7 +35,7 @@
                     <h2>EcoShop</h2>
                 </div>
                 
-                <div class="nav-menu">
+                <div class="nav-menu" id="navMenu">
                     <a href="#inicio" class="nav-link">Inicio</a>
                     <div class="dropdown">
                         <a href="#productos" class="nav-link">Productos <i class="fas fa-chevron-down"></i></a>
@@ -43,6 +46,10 @@
                     <a href="#contacto" class="nav-link">Contacto</a>
                     <a href="#recursos" class="nav-link">Recursos</a>
                 </div>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
                 
                 <div class="nav-actions">
                     <!-- Login/User Section -->
@@ -132,6 +139,9 @@
             <div class="section-header">
                 <h2>Nuestros Productos Destacados</h2>
                 <p>Paneles solares de alta eficiencia para diferentes necesidades</p>
+                <button class="btn-primary" onclick="window.adminPaneles.mostrarFormularioPanel()" style="margin-top: 15px;">
+                    <i class="fas fa-plus"></i> Agregar Nuevo Panel
+                </button>
                 
                 <!-- Search and Filter -->
                 <div class="product-filters">
@@ -277,6 +287,9 @@
             </div>
             <button class="btn-checkout" onclick="checkout()" id="checkoutBtn" disabled>
                 Proceso de pago
+            </button>
+            <button class="btn-clear-cart" onclick="clearCart()" style="background: #ff4757; margin-top: 10px;">
+                <i class="fas fa-trash"></i> Vaciar Carrito
             </button>
         </div>
     </div>

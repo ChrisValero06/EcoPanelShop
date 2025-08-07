@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carrito de Compras - EcoShop</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="icons/icon-512.png" />
@@ -262,14 +262,56 @@
         }
         
         @media (max-width: 768px) {
+            .cart-container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .cart-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .cart-header h1 {
+                font-size: 20px;
+            }
+            
+            .cart-content {
+                padding: 20px;
+            }
+            
             .cart-item {
                 flex-direction: column;
                 text-align: center;
+                padding: 15px;
             }
             
             .cart-item-image {
                 margin-right: 0;
                 margin-bottom: 15px;
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 15px auto;
+            }
+            
+            .cart-item-details h3 {
+                font-size: 16px;
+            }
+            
+            .cart-item-price {
+                font-size: 16px;
+            }
+            
+            .quantity-controls {
+                justify-content: center;
+                margin: 10px 0;
+            }
+            
+            .quantity-controls button {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
             }
             
             .cart-item-total {
@@ -277,9 +319,111 @@
                 margin-top: 15px;
             }
             
+            .total-price {
+                font-size: 18px;
+            }
+            
+            .remove-btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            
+            .cart-summary {
+                padding: 20px;
+            }
+            
+            .summary-row {
+                font-size: 14px;
+            }
+            
+            .summary-row:last-child {
+                font-size: 18px;
+            }
+            
+            .btn-checkout {
+                padding: 15px 30px;
+                font-size: 16px;
+                margin: 5px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cart-container {
+                margin: 5px;
+            }
+            
             .cart-header {
-                flex-direction: column;
-                gap: 15px;
+                padding: 10px;
+            }
+            
+            .cart-header h1 {
+                font-size: 18px;
+            }
+            
+            .cart-content {
+                padding: 15px;
+            }
+            
+            .cart-item {
+                padding: 10px;
+            }
+            
+            .cart-item-image {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .cart-item-details h3 {
+                font-size: 14px;
+            }
+            
+            .cart-item-price {
+                font-size: 14px;
+            }
+            
+            .quantity-controls button {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+            
+            .total-price {
+                font-size: 16px;
+            }
+            
+            .remove-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .cart-summary {
+                padding: 15px;
+            }
+            
+            .summary-row {
+                font-size: 13px;
+            }
+            
+            .summary-row:last-child {
+                font-size: 16px;
+            }
+            
+            .btn-checkout {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 3px;
+            }
+            
+            .empty-cart i {
+                font-size: 60px;
+            }
+            
+            .empty-cart h2 {
+                font-size: 18px;
+            }
+            
+            .empty-cart p {
+                font-size: 14px;
             }
         }
     </style>
@@ -343,7 +487,7 @@
 
         // Función para cargar el carrito desde localStorage
         function loadCartFromStorage() {
-            const savedCart = localStorage.getItem('ecoshop_cart');
+            const savedCart = localStorage.getItem('cart');
             if (savedCart) {
                 cart = JSON.parse(savedCart);
                 updateCartTotal();
@@ -352,7 +496,7 @@
 
         // Función para guardar el carrito en localStorage
         function saveCartToStorage() {
-            localStorage.setItem('ecoshop_cart', JSON.stringify(cart));
+            localStorage.setItem('cart', JSON.stringify(cart));
         }
 
         // Función para actualizar la visualización del carrito
@@ -383,11 +527,11 @@
                 const itemHTML = `
                     <div class="cart-item">
                         <div class="cart-item-image">
-                            <img src="${item.imagen || 'https://via.placeholder.com/100x100?text=Panel'}" alt="${item.nombre}">
+                            <img src="${item.imagen || 'https://via.placeholder.com/100x100?text=Panel'}" alt="${item.name}">
                         </div>
                         <div class="cart-item-details">
-                            <h3>${item.nombre}</h3>
-                            <div class="cart-item-price">$${item.precio.toFixed(2)}</div>
+                            <h3>${item.name}</h3>
+                            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
                             <div class="quantity-controls">
                                 <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
                                 <span>${item.quantity}</span>
@@ -395,7 +539,7 @@
                             </div>
                         </div>
                         <div class="cart-item-total">
-                            <div class="total-price">$${(item.precio * item.quantity).toFixed(2)}</div>
+                            <div class="total-price">$${(item.price * item.quantity).toFixed(2)}</div>
                             <button onclick="removeFromCart('${item.id}')" class="remove-btn">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
@@ -434,7 +578,7 @@
 
         // Función para actualizar el total del carrito
         function updateCartTotal() {
-            cartTotal = cart.reduce((total, item) => total + (item.precio * item.quantity), 0);
+            cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
         }
 
         // Función para actualizar el resumen
