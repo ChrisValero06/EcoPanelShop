@@ -25,6 +25,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         
         .login-container {
@@ -33,25 +34,21 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            max-width: 1000px;
+            max-width: 450px;
             width: 100%;
-            margin: 20px;
-        }
-        
-        .login-row {
-            min-height: 600px;
-        }
-        
-        .login-image {
-            background: linear-gradient(135deg, #009688 0%, #00796b 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0 auto;
             position: relative;
-            overflow: hidden;
         }
         
-        .login-image::before {
+        .login-header {
+            background: linear-gradient(135deg, #009688 0%, #00796b 100%);
+            color: white;
+            padding: 40px 30px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-header::before {
             content: '';
             position: absolute;
             top: 0;
@@ -59,76 +56,29 @@
             right: 0;
             bottom: 0;
             background: url('https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80') center/cover;
-            opacity: 0.3;
+            opacity: 0.2;
         }
         
-        .login-image-content {
+        .login-header-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            color: white;
-            padding: 40px;
-        }
-        
-        .login-image-content h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .login-image-content p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-        }
-        
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .feature-list li {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .feature-list i {
-            background: rgba(255,255,255,0.2);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .login-form {
-            padding: 50px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
         }
         
         .login-header h1 {
-            color: #333;
-            font-size: 2.2rem;
-            font-weight: 600;
+            font-size: 2rem;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
         .login-header p {
-            color: #666;
             font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .login-form {
+            padding: 40px 30px;
         }
         
         .form-floating {
@@ -163,6 +113,7 @@
             color: white;
             transition: all 0.3s ease;
             margin-bottom: 20px;
+            width: 100%;
         }
         
         .btn-login:hover {
@@ -185,6 +136,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            width: 100%;
         }
         
         .btn-google:hover {
@@ -252,16 +204,18 @@
         
         .back-to-home {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             background: rgba(255,255,255,0.2);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 15px;
+            border-radius: 20px;
             text-decoration: none;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+            z-index: 10;
         }
         
         .back-to-home:hover {
@@ -286,28 +240,6 @@
             color: #721c24;
         }
         
-        @media (max-width: 768px) {
-            .login-image {
-                display: none;
-            }
-            
-            .login-form {
-                padding: 30px 20px;
-            }
-            
-            .login-header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .back-to-home {
-                position: relative;
-                top: auto;
-                left: auto;
-                margin-bottom: 20px;
-                display: inline-block;
-            }
-        }
-        
         .loading-spinner {
             display: none;
             width: 20px;
@@ -323,95 +255,146 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-container {
+                max-width: 100%;
+                border-radius: 15px;
+            }
+            
+            .login-header {
+                padding: 30px 20px 25px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .login-form {
+                padding: 30px 20px;
+            }
+            
+            .back-to-home {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 20px;
+                display: inline-block;
+                background: rgba(0, 150, 136, 0.1);
+                color: #009688;
+            }
+            
+            .back-to-home:hover {
+                background: rgba(0, 150, 136, 0.2);
+                color: #00796b;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .login-header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .login-form {
+                padding: 25px 15px;
+            }
+            
+            .form-control {
+                padding: 12px 15px;
+            }
+            
+            .btn-login, .btn-google {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .login-container {
+                max-width: 500px;
+            }
+            
+            .login-header {
+                padding: 50px 40px 40px;
+            }
+            
+            .login-form {
+                padding: 50px 40px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .login-container {
+                max-width: 550px;
+            }
+        }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-to-home">
-        <i class="fas fa-arrow-left"></i> Volver al Inicio
-    </a>
-    
     <div class="login-container">
-        <div class="row login-row g-0">
-            <!-- Imagen lateral -->
-            <div class="col-lg-6 login-image">
-                <div class="login-image-content">
-                    <h2>Bienvenido a EcoShop</h2>
-                    <p>Tu tienda de confianza para paneles solares de alta calidad</p>
-                    <ul class="feature-list">
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Acceso a productos exclusivos</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Historial de compras</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Ofertas especiales</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Soporte prioritario</span>
-                        </li>
-                    </ul>
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </a>
+        
+        <div class="login-header">
+            <div class="login-header-content">
+                <h1>Iniciar Sesión</h1>
+                <p>Accede a tu cuenta para continuar</p>
+            </div>
+        </div>
+        
+        <div class="login-form">
+            <!-- Alertas -->
+            <div id="alertContainer"></div>
+            
+            <form id="loginForm">
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" required>
+                    <label for="email">
+                        <i class="fas fa-envelope me-2"></i>Correo Electrónico
+                    </label>
                 </div>
+                
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+                    <label for="password">
+                        <i class="fas fa-lock me-2"></i>Contraseña
+                    </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">
+                        Recordarme
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-login">
+                    <span class="loading-spinner" id="loginSpinner"></span>
+                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>o continúa con</span>
             </div>
             
-            <!-- Formulario de login -->
-            <div class="col-lg-6 login-form">
-                <div class="login-header">
-                    <h1>Iniciar Sesión</h1>
-                    <p>Accede a tu cuenta para continuar</p>
-                </div>
-                
-                <!-- Alertas -->
-                <div id="alertContainer"></div>
-                
-                <form id="loginForm">
-                    <div class="form-floating">
-                        <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" required>
-                        <label for="email">
-                            <i class="fas fa-envelope me-2"></i>Correo Electrónico
-                        </label>
-                    </div>
-                    
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
-                        <label for="password">
-                            <i class="fas fa-lock me-2"></i>Contraseña
-                        </label>
-                    </div>
-                    
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">
-                            Recordarme
-                        </label>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-login w-100">
-                        <span class="loading-spinner" id="loginSpinner"></span>
-                        <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
-                    </button>
-                </form>
-                
-                <div class="divider">
-                    <span>o continúa con</span>
-                </div>
-                
-                <button type="button" class="btn btn-google w-100" onclick="signInWithGoogle()">
-                    <i class="fab fa-google"></i>
-                    Continuar con Google
-                </button>
-                
-                <div class="forgot-password">
-                    <a href="#" onclick="forgotPassword()">¿Olvidaste tu contraseña?</a>
-                </div>
-                
-                <div class="signup-link">
-                    <p>¿No tienes una cuenta? <a href="#" onclick="showSignupForm()">Regístrate aquí</a></p>
-                </div>
+            <button type="button" class="btn btn-google" onclick="signInWithGoogle()">
+                <i class="fab fa-google"></i>
+                Continuar con Google
+            </button>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="forgotPassword()">¿Olvidaste tu contraseña?</a>
+            </div>
+            
+            <div class="signup-link">
+                <p>¿No tienes una cuenta? <a href="#" onclick="showSignupForm()">Regístrate aquí</a></p>
             </div>
         </div>
     </div>
