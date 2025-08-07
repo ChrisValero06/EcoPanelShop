@@ -12,8 +12,18 @@ const firebaseConfig = {
 
 // Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
+
 // Inicializa Realtime Database
 const database = firebase.database();
+
+// Verificar conexión a Firebase
+database.ref('.info/connected').on('value', function(snap) {
+  if (snap.val() === true) {
+    console.log('✅ Conectado a Firebase Realtime Database');
+  } else {
+    console.log('❌ No conectado a Firebase Realtime Database');
+  }
+});
 
 // Funciones para manejar paneles solares
 const panelesService = {
