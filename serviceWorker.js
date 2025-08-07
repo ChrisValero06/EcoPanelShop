@@ -12,6 +12,7 @@ const appShell = [
   './js/notification-config.js',
   './manifest.json',
   './icons/icon-512.png',
+  './icons/icono-511.png',
 ];
 
 // Instalación del Service Worker
