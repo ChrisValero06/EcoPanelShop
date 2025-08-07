@@ -117,8 +117,8 @@ self.addEventListener('message', function(event) {
 // Función para mostrar notificación desde el Service Worker
 function showNotificationFromSW(title, options = {}) {
   const defaultOptions = {
-    icon: '/icons/icon-512.png',
-    badge: '/icons/icon-512.png',
+    icon: '/icons/icono-511.png',
+    badge: '/icons/icono-511.png',
     tag: 'sw-notification',
     requireInteraction: true,
     ...options
