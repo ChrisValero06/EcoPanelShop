@@ -40,6 +40,40 @@ self.addEventListener("activate", activateEvent => {
 
 // Interceptar peticiones de red
 self.addEventListener("fetch", fetchEvent => {
+  // Manejar específicamente las peticiones del manifest
+  if (fetchEvent.request.url.includes('manifest.json')) {
+    fetchEvent.respondWith(
+      caches.match(fetchEvent.request).then(res => {
+        if (res) {
+          return res;
+        }
+        // Si no está en cache, intentar fetch y cachear
+        return fetch(fetchEvent.request).then(response => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CacheKeyShop).then(cache => {
+              cache.put(fetchEvent.request, responseClone);
+            });
+          }
+          return response;
+        }).catch(() => {
+          // Si falla, devolver una respuesta por defecto
+          return new Response(JSON.stringify({
+            name: "EcoShop - Paneles Solares",
+            short_name: "EcoShop",
+            start_url: "./index.html",
+            display: "standalone",
+            background_color: "#667eea",
+            theme_color: "#667eea"
+          }), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        });
+      })
+    );
+    return;
+  }
+  
   fetchEvent.respondWith(
     caches.match(fetchEvent.request).then(res => {
       return res || fetch(fetchEvent.request);

@@ -28,14 +28,18 @@ function cargarPaneles() {
             console.log("Panel:", key, paneles[key]);
           });
         } else {
-          console.log("No hay paneles registrados");
+          console.log("No hay paneles registrados en Firebase");
         }
       })
       .catch((error) => {
-        console.error("Error al leer paneles:", error);
+        console.error("Error al leer paneles desde Firebase:", error);
+        // Si hay error, mostrar paneles de muestra
+        mostrarPanelesDeMuestra();
       });
   } else {
     console.warn("Servicio de paneles no está disponible. Verifica tu configuración de Firebase.");
+    // Si el servicio no está disponible, mostrar paneles de muestra
+    mostrarPanelesDeMuestra();
   }
 }
 
@@ -98,15 +102,16 @@ async function mostrarPanelesEnProductos() {
         }
       } else {
         // Si no hay paneles en Firebase, mostrar paneles de muestra
+        console.log("No hay paneles en Firebase, mostrando paneles de muestra");
         mostrarPanelesDeMuestra();
       }
     } else {
-      // Fallback a paneles de muestra si el servicio no está disponible
+      console.warn("Servicio de paneles no disponible, mostrando paneles de muestra");
       mostrarPanelesDeMuestra();
     }
   } catch (error) {
-    console.error("Error al cargar paneles:", error);
-    // Mostrar paneles de muestra en caso de error
+    console.error("Error al cargar paneles desde Firebase:", error);
+    // En caso de error, mostrar paneles de muestra
     mostrarPanelesDeMuestra();
   }
 }
@@ -362,12 +367,16 @@ function inicializarApp() {
   // Verificar que Firebase esté disponible para los paneles solares
   if (typeof firebase === 'undefined') {
     console.error('Firebase no está disponible para cargar paneles solares');
+    // Mostrar paneles de muestra si Firebase no está disponible
+    mostrarPanelesDeMuestra();
     return;
   }
   
   // Verificar que Realtime Database esté disponible
-  if (typeof database === 'undefined') {
+  if (typeof database === 'undefined' || database === null) {
     console.error('Firebase Realtime Database no está inicializado');
+    // Mostrar paneles de muestra si la base de datos no está disponible
+    mostrarPanelesDeMuestra();
     return;
   }
   
@@ -377,8 +386,14 @@ function inicializarApp() {
   initializeNotifications();
   
   // Cargar paneles solares desde Firebase (registrados desde app móvil Maui)
-  cargarPaneles();
-  mostrarPanelesEnProductos();
+  try {
+    cargarPaneles();
+    mostrarPanelesEnProductos();
+  } catch (error) {
+    console.error('Error al cargar paneles desde Firebase:', error);
+    // Mostrar paneles de muestra en caso de error
+    mostrarPanelesDeMuestra();
+  }
 }
 
 // Llama a la función al cargar la página:

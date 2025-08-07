@@ -2,7 +2,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyChhNYQsf0_fHnXohdizYP7-eSM9kGdnaI",
   authDomain: "crudfirebase-5f35c.firebaseapp.com",
-  databaseURL: "https://crudfirebase-5f35c-default-rtdb.firebaseio.com",
+  databaseURL: "https://crudfirebase-5f35c-default-rtdb.firebaseio.com/",
   projectId: "crudfirebase-5f35c",
   storageBucket: "crudfirebase-5f35c.firebasestorage.app",
   messagingSenderId: "339447477684",
@@ -11,25 +11,38 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Inicializa Realtime Database
-const database = firebase.database();
-
-// Verificar conexión a Firebase
-database.ref('.info/connected').on('value', function(snap) {
-  if (snap.val() === true) {
-    console.log('✅ Conectado a Firebase Realtime Database');
-  } else {
-    console.log('❌ No conectado a Firebase Realtime Database');
-  }
-});
+let database;
+try {
+  firebase.initializeApp(firebaseConfig);
+  console.log('✅ Firebase inicializado correctamente');
+  
+  // Inicializa Realtime Database
+  database = firebase.database();
+  
+  // Verificar conexión a Firebase
+  database.ref('.info/connected').on('value', function(snap) {
+    if (snap.val() === true) {
+      console.log('✅ Conectado a Firebase Realtime Database');
+    } else {
+      console.log('❌ No conectado a Firebase Realtime Database');
+    }
+  }, function(error) {
+    console.error('❌ Error al verificar conexión Firebase:', error);
+  });
+  
+} catch (error) {
+  console.error('❌ Error al inicializar Firebase:', error);
+  database = null;
+}
 
 // Funciones para manejar paneles solares
 const panelesService = {
   // Obtener todos los paneles
   obtenerPaneles: async () => {
     try {
+      if (!database) {
+        throw new Error('Firebase Database no está inicializado');
+      }
       const snapshot = await database.ref("paneles").once('value');
       return snapshot.val() || {};
     } catch (error) {
